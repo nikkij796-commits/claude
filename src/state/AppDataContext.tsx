@@ -38,7 +38,7 @@ interface AppDataValue {
   favorites: string[];
   toggleFavorite: (toolId: string) => void;
 
-  updateTool: (toolId: string, patch: Partial<Pick<Tool, "name" | "howTo" | "guidedSeconds">>) => void;
+  updateTool: (toolId: string, patch: Partial<Pick<Tool, "name" | "howTo" | "guidedSeconds" | "moods">>) => void;
   addCustomTool: (categoryId: CategoryId, name: string) => string;
   removeCustomTool: (toolId: string) => void;
 

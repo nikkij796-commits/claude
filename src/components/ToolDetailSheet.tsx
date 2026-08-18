@@ -1,8 +1,16 @@
 import { useState } from "react";
-import type { Tool } from "../types";
+import type { Intensity, Tool } from "../types";
 import { useAppData } from "../state/AppDataContext";
 import { Button } from "./ui";
 import { StructuredJournalForm } from "./StructuredJournalForm";
+
+const MOOD_CHIPS: { level: Intensity; label: string }[] = [
+  { level: 1, label: "Calm" },
+  { level: 2, label: "Unsettled" },
+  { level: 3, label: "Noticeable" },
+  { level: 4, label: "High" },
+  { level: 5, label: "Overwhelming" },
+];
 
 export function ToolDetailSheet({
   tool,
@@ -24,6 +32,12 @@ export function ToolDetailSheet({
   const isFav = favorites.includes(liveTool.id);
   const usedToday = getDayLog(todayKeyStr).toolIds.includes(liveTool.id);
   const isCustom = "custom" in liveTool && (liveTool as { custom?: boolean }).custom;
+  const moods = liveTool.moods ?? [];
+
+  const toggleMood = (level: Intensity) => {
+    const next = moods.includes(level) ? moods.filter((m) => m !== level) : [...moods, level].sort((a, b) => a - b);
+    updateTool(liveTool.id, { moods: next });
+  };
 
   const save = () => {
     updateTool(liveTool.id, { name: draftName.trim() || liveTool.name, howTo: draftHowTo });
@@ -75,6 +89,24 @@ export function ToolDetailSheet({
             </div>
 
             <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink-soft">{liveTool.howTo}</p>
+
+            <p className="mt-5 text-sm font-medium text-ink-soft">Might help right now when feeling…</p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {MOOD_CHIPS.map((chip) => {
+                const active = moods.includes(chip.level);
+                return (
+                  <button
+                    key={chip.level}
+                    onClick={() => toggleMood(chip.level)}
+                    className={`rounded-full px-3 py-1.5 text-sm ${
+                      active ? "bg-sage text-white" : "bg-white/70 border border-black/10 text-ink-soft"
+                    }`}
+                  >
+                    {chip.label}
+                  </button>
+                );
+              })}
+            </div>
 
             <div className="mt-5 flex flex-wrap gap-2">
               {onStartGuided && (

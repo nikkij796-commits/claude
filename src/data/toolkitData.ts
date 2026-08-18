@@ -1,4 +1,4 @@
-import type { Category, JournalPrompt, Tool } from "../types";
+import type { Category, Intensity, JournalPrompt, Tool } from "../types";
 
 /**
  * Starter toolkit data, transcribed from the user's handwritten toolkit.
@@ -86,50 +86,66 @@ const GRATITUDE_PROMPTS: JournalPrompt[] = [
   { key: "three", label: "3." },
 ];
 
+/**
+ * Starter "might help right now" moods per tool — which check-in
+ * intensities each tool gets suggested for on the Home screen. Fully
+ * editable in the app (open a tool, tap a mood chip), this is just the
+ * starting point:
+ * - the four grounding/in-the-moment predicting tools + everything in
+ *   Identifying & Feeling cover Overwhelming (5)
+ * - the rest of Predicting & Preventing is preventive/planning-oriented,
+ *   so it stops at High (4) and doesn't show up under Overwhelming
+ * - Self Care leans toward the calmer end (1-3)
+ */
+const MOODS_GROUNDING: Intensity[] = [2, 3, 4, 5];
+const MOODS_PREVENTIVE: Intensity[] = [1, 2, 3, 4];
+const MOODS_IDENTIFYING: Intensity[] = [3, 4, 5];
+const MOODS_SELFCARE: Intensity[] = [1, 2, 3];
+
 export const DEFAULT_TOOLS: Tool[] = [
   // 1. Predicting & Preventing
-  tool("predicting", "Ins & outs"),
-  tool("predicting", "Triggers"),
-  tool("predicting", "Breath work", { guidedSeconds: 60 }),
-  tool("predicting", "Take a break / walk away", { guidedSeconds: 90 }),
-  tool("predicting", "5-4-3-2-1 (PQ exercise)", { guidedSeconds: 5 * 60 }),
-  tool("predicting", "Muscle relaxation", { guidedSeconds: 90 }),
-  tool("predicting", "Gratitude journaling", { journalPrompts: GRATITUDE_PROMPTS }),
-  tool("predicting", "Affirmations", { guidedSeconds: 60 }),
-  tool("predicting", "List boundaries"),
+  tool("predicting", "Ins & outs", { moods: MOODS_PREVENTIVE }),
+  tool("predicting", "Triggers", { moods: MOODS_PREVENTIVE }),
+  tool("predicting", "Breath work", { guidedSeconds: 60, moods: MOODS_GROUNDING }),
+  tool("predicting", "Take a break / walk away", { guidedSeconds: 90, moods: MOODS_GROUNDING }),
+  tool("predicting", "5-4-3-2-1 (PQ exercise)", { guidedSeconds: 5 * 60, moods: MOODS_GROUNDING }),
+  tool("predicting", "Muscle relaxation", { guidedSeconds: 90, moods: MOODS_GROUNDING }),
+  tool("predicting", "Gratitude journaling", { journalPrompts: GRATITUDE_PROMPTS, moods: MOODS_PREVENTIVE }),
+  tool("predicting", "Affirmations", { guidedSeconds: 60, moods: MOODS_PREVENTIVE }),
+  tool("predicting", "List boundaries", { moods: MOODS_PREVENTIVE }),
 
   // 2. Identifying & Feeling
-  tool("identifying", "Reiki", { guidedSeconds: 36 * 60 }),
-  tool("identifying", "Abhishek"),
-  tool("identifying", "Journaling / blue book"),
-  tool("identifying", "Therapy"),
-  tool("identifying", "CBT", { journalPrompts: CBT_PROMPTS }),
-  tool("identifying", "Ice cube", { guidedSeconds: 60 }),
-  tool("identifying", "Talk it out"),
-  tool("identifying", "Text it out"),
-  tool("identifying", "Make it cold", { guidedSeconds: 60 }),
-  tool("identifying", "Reduce sensory inputs", { guidedSeconds: 90 }),
-  tool("identifying", "Music", { guidedSeconds: 90 }),
-  tool("identifying", "Clarify assumptions"),
-  tool("identifying", "Thoughts on trial", { journalPrompts: THOUGHTS_ON_TRIAL_PROMPTS }),
+  tool("identifying", "Reiki", { guidedSeconds: 36 * 60, moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Abhishek", { moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Journaling / blue book", { moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Therapy", { moods: MOODS_IDENTIFYING }),
+  tool("identifying", "CBT", { journalPrompts: CBT_PROMPTS, moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Ice cube", { guidedSeconds: 60, moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Talk it out", { moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Text it out", { moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Make it cold", { guidedSeconds: 60, moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Reduce sensory inputs", { guidedSeconds: 90, moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Music", { guidedSeconds: 90, moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Clarify assumptions", { moods: MOODS_IDENTIFYING }),
+  tool("identifying", "Thoughts on trial", { journalPrompts: THOUGHTS_ON_TRIAL_PROMPTS, moods: MOODS_IDENTIFYING }),
 
   // 3. Self Care
-  tool("selfcare", "Nutrition / water"),
-  tool("selfcare", "Gym"),
-  tool("selfcare", "Sleep"),
-  tool("selfcare", "Run"),
-  tool("selfcare", "Yoga"),
-  tool("selfcare", "Workout class"),
-  tool("selfcare", "Sports"),
-  tool("selfcare", "Call friend / family"),
-  tool("selfcare", "Shower"),
-  tool("selfcare", "Change clothes"),
-  tool("selfcare", "Walk"),
-  tool("selfcare", "Talk to Nikki"),
-  tool("selfcare", "Cuddles"),
-  tool("selfcare", "Cooking"),
-  tool("selfcare", "Screen break"),
-  tool("selfcare", "Doodling"),
+  tool("selfcare", "Nutrition / water", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Gym", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Sleep", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Run", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Yoga", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Workout class", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Sports", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Call friend / family", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Shower", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Change clothes", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Walk", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Talk to Nikki", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Cuddles", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Cooking", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Screen break", { moods: MOODS_SELFCARE }),
+  tool("selfcare", "Doodling", { moods: MOODS_SELFCARE }),
 
   // 4. Communication
   tool("communication", "Talk it out"),

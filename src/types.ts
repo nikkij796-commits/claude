@@ -24,6 +24,8 @@ export interface Tool {
   guidedSeconds?: number;
   /** When set, "Log entry" on this tool opens a structured journal form using these prompts instead of freeform text. */
   journalPrompts?: JournalPrompt[];
+  /** Which check-in intensities this tool should be suggested for under "Might help right now". */
+  moods?: Intensity[];
 }
 
 export type Intensity = 1 | 2 | 3 | 4 | 5;
@@ -56,7 +58,7 @@ export interface JournalEntry {
 }
 
 export interface ToolEdits {
-  [toolId: string]: Partial<Pick<Tool, "name" | "howTo" | "guidedSteps" | "guidedSeconds">>;
+  [toolId: string]: Partial<Pick<Tool, "name" | "howTo" | "guidedSteps" | "guidedSeconds" | "moods">>;
 }
 
 export interface CustomTool extends Tool {
