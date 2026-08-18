@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+  /* Calm, low-stimulation palette */
+  --color-paper: #f6f3ec;
+  --color-paper-dim: #efeade;
+  --color-ink: #3c372f;
+  --color-ink-soft: #6b6459;
+  --color-ink-faint: #9b9488;
+
+  --color-sage: #8ba888;
+  --color-sage-soft: #dfe8dc;
+  --color-lavender: #a79bc4;
+  --color-lavender-soft: #e9e4f2;
+  --color-clay: #c98f6e;
+  --color-clay-soft: #f2e2d4;
+  --color-sky: #83a6b3;
+  --color-sky-soft: #dfeaee;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  min-height: 100dvh;
+  overscroll-behavior-y: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button {
+  font-family: inherit;
+}
+
+/* Respect reduced-motion preference; keep motion minimal regardless */
+* {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

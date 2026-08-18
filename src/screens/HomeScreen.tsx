@@ -1,0 +1,71 @@
+import { useMemo, useState } from "react";
+import type { Intensity, Tool } from "../types";
+import { useAppData } from "../state/AppDataContext";
+import { IntensitySlider } from "../components/IntensitySlider";
+import { ToolCard } from "../components/ToolCard";
+import { Button, Card, ScreenHeader } from "../components/ui";
+import { recommendTools } from "../lib/recommend";
+
+export function HomeScreen({
+  onOpenTool,
+  onStartGuided,
+}: {
+  onOpenTool: (tool: Tool) => void;
+  onStartGuided: () => void;
+}) {
+  const { tools, favorites, addCheckIn, checkIns } = useAppData();
+  const [intensity, setIntensity] = useState<Intensity>(3);
+  const [logged, setLogged] = useState(false);
+
+  const recommended = useMemo(() => recommendTools(tools, intensity, favorites, 4), [tools, intensity, favorites]);
+  const lastCheckIn = checkIns[0];
+
+  return (
+    <div className="pb-28">
+      <ScreenHeader title="How are you feeling?" subtitle="A quick check-in, just for you." />
+
+      <div className="px-5">
+        <Card className="p-5">
+          <IntensitySlider value={intensity} onChange={setIntensity} />
+          <Button
+            className="mt-5 w-full"
+            variant={logged ? "secondary" : "primary"}
+            onClick={() => {
+              addCheckIn({ intensity });
+              setLogged(true);
+              setTimeout(() => setLogged(false), 2000);
+            }}
+          >
+            {logged ? "Logged ✓" : "Log this check-in"}
+          </Button>
+        </Card>
+
+        {lastCheckIn && (
+          <p className="mt-3 text-center text-xs text-ink-faint">
+            Last check-in {new Date(lastCheckIn.timestamp).toLocaleString([], {
+              weekday: "short",
+              hour: "numeric",
+              minute: "2-digit",
+            })}
+          </p>
+        )}
+
+        <button
+          onClick={onStartGuided}
+          className="mt-6 w-full rounded-2xl bg-lavender text-white py-4 text-base font-medium shadow-sm active:opacity-90"
+        >
+          I need help now
+        </button>
+
+        <h2 className="mt-8 mb-3 text-sm font-medium text-ink-soft">
+          Might help right now
+        </h2>
+        <div className="space-y-2">
+          {recommended.map((tool) => (
+            <ToolCard key={tool.id} tool={tool} onOpen={onOpenTool} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
