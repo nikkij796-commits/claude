@@ -1,0 +1,104 @@
+import { useState } from "react";
+import { useAppData } from "../state/AppDataContext";
+import { currentWeekDates, formatDayNumber } from "../lib/week";
+import { Card, ScreenHeader } from "../components/ui";
+import type { Tool } from "../types";
+
+export function TrackerScreen() {
+  const { getDayLog, updateDayLog, toggleDayTool, tools, favorites, todayKeyStr } = useAppData();
+  const week = currentWeekDates();
+  const [openDate, setOpenDate] = useState<string | null>(todayKeyStr);
+
+  const checkedCount = week.filter((d) => getDayLog(d.date).checked).length;
+
+  const quickTools: Tool[] = [
+    ...tools.filter((t) => favorites.includes(t.id)),
+    ...tools.filter((t) => !favorites.includes(t.id)),
+  ].slice(0, 12);
+
+  return (
+    <div className="pb-28">
+      <ScreenHeader title="Tracker" subtitle="A simple week-at-a-glance." />
+
+      <div className="px-5">
+        <Card className="p-4 mb-4">
+          <p className="text-sm text-ink-soft">
+            {checkedCount === 0
+              ? "Nothing logged yet this week — no rush."
+              : `You've checked in on ${checkedCount} of 7 days this week.`}
+          </p>
+        </Card>
+
+        <div className="space-y-2">
+          {week.map((d) => {
+            const log = getDayLog(d.date);
+            const isOpen = openDate === d.date;
+            return (
+              <Card key={d.date} className={d.isToday ? "border-sage/40" : ""}>
+                <button
+                  className="w-full flex items-center gap-3 p-4"
+                  onClick={() => setOpenDate(isOpen ? null : d.date)}
+                >
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateDayLog(d.date, { checked: !log.checked });
+                    }}
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm ${
+                      log.checked
+                        ? "bg-sage border-sage text-white"
+                        : "border-black/15 text-transparent"
+                    }`}
+                  >
+                    ✓
+                  </span>
+                  <div className="flex-1 text-left">
+                    <span className={`font-medium ${d.isToday ? "text-ink" : "text-ink-soft"}`}>
+                      {d.label} {formatDayNumber(d.date)}
+                      {d.isToday && <span className="ml-2 text-xs text-sage">today</span>}
+                    </span>
+                    {log.toolIds.length > 0 && (
+                      <p className="mt-0.5 text-xs text-ink-faint">
+                        {log.toolIds.length} tool{log.toolIds.length === 1 ? "" : "s"} used
+                      </p>
+                    )}
+                  </div>
+                  <span className="text-ink-faint text-sm">{isOpen ? "−" : "+"}</span>
+                </button>
+
+                {isOpen && (
+                  <div className="px-4 pb-4">
+                    <textarea
+                      value={log.note}
+                      onChange={(e) => updateDayLog(d.date, { note: e.target.value })}
+                      placeholder="A short note about the day (optional)"
+                      rows={2}
+                      className="w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm"
+                    />
+                    <p className="mt-3 mb-1.5 text-xs font-medium text-ink-soft">Tools used</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {quickTools.map((t) => {
+                        const active = log.toolIds.includes(t.id);
+                        return (
+                          <button
+                            key={t.id}
+                            onClick={() => toggleDayTool(d.date, t.id)}
+                            className={`rounded-full px-3 py-1.5 text-xs ${
+                              active ? "bg-sage text-white" : "bg-white/70 border border-black/10 text-ink-soft"
+                            }`}
+                          >
+                            {t.name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}

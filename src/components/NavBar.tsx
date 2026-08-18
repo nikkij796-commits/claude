@@ -1,0 +1,37 @@
+export type ScreenId = "home" | "toolkit" | "tracker" | "journal" | "communication";
+
+const TABS: { id: ScreenId; label: string; icon: string }[] = [
+  { id: "home", label: "Home", icon: "◎" },
+  { id: "toolkit", label: "Toolkit", icon: "◈" },
+  { id: "tracker", label: "Tracker", icon: "▦" },
+  { id: "journal", label: "Journal", icon: "✎" },
+  { id: "communication", label: "Talk", icon: "◐" },
+];
+
+export function NavBar({ current, onChange }: { current: ScreenId; onChange: (id: ScreenId) => void }) {
+  return (
+    <nav className="fixed bottom-0 inset-x-0 z-30 bg-paper/95 backdrop-blur border-t border-black/5 pb-[env(safe-area-inset-bottom)]">
+      <div className="mx-auto max-w-md grid grid-cols-5">
+        {TABS.map((tab) => {
+          const active = tab.id === current;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => onChange(tab.id)}
+              className="flex flex-col items-center justify-center gap-1 py-2.5 text-xs"
+              aria-current={active}
+            >
+              <span
+                className={`text-lg leading-none ${active ? "text-sage" : "text-ink-faint"}`}
+                aria-hidden
+              >
+                {tab.icon}
+              </span>
+              <span className={active ? "text-ink font-medium" : "text-ink-faint"}>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
