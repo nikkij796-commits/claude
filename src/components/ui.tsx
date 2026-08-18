@@ -23,7 +23,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }) {
   return (
     <button
-      className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium transition-colors disabled:opacity-40 ${variantClasses[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-base font-medium transition-colors disabled:opacity-40 ${variantClasses[variant]} ${className}`}
       {...rest}
     >
       {children}

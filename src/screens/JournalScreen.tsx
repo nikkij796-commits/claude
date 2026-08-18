@@ -34,7 +34,7 @@ export function JournalScreen() {
             onChange={(e) => setText(e.target.value)}
             placeholder="Write freely..."
             rows={4}
-            className="w-full resize-none bg-transparent text-[15px] outline-none placeholder:text-ink-faint"
+            className="w-full resize-none bg-transparent text-base outline-none placeholder:text-ink-faint"
           />
           <div className="mt-2 flex flex-wrap gap-1.5">
             {SUGGESTED_TAGS.map((tag) => (
@@ -94,7 +94,7 @@ export function JournalScreen() {
                   Delete
                 </button>
               </div>
-              <p className="mt-1.5 whitespace-pre-wrap text-[15px] text-ink">{entry.text}</p>
+              <p className="mt-1.5 whitespace-pre-wrap text-base text-ink">{entry.text}</p>
               {entry.tags.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {entry.tags.map((tag) => (

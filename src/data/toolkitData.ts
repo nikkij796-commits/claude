@@ -56,13 +56,21 @@ function tool(categoryId: Tool["categoryId"], name: string, extra: Partial<Tool>
   };
 }
 
+// The classic 5-step CBT thought record.
 const CBT_PROMPTS: JournalPrompt[] = [
   { key: "situation", label: "Situation", placeholder: "What happened?" },
   { key: "thought", label: "Automatic thought", placeholder: "What went through your mind?" },
-  { key: "emotion", label: "Emotion(s) & intensity", placeholder: "e.g. anxious, 7/10" },
-  { key: "evidenceFor", label: "Evidence for the thought" },
-  { key: "evidenceAgainst", label: "Evidence against the thought" },
-  { key: "balanced", label: "A more balanced thought" },
+  { key: "feeling", label: "Feeling & intensity", placeholder: "e.g. anxious, 7/10" },
+  {
+    key: "evidence",
+    label: "Evidence for & against the thought",
+    placeholder: "What supports it? What argues against it?",
+  },
+  {
+    key: "balanced",
+    label: "Balanced thought & how you feel now",
+    placeholder: "A fairer way to see it, and your feeling/intensity now",
+  },
 ];
 
 const THOUGHTS_ON_TRIAL_PROMPTS: JournalPrompt[] = [

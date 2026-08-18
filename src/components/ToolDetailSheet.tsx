@@ -74,7 +74,7 @@ export function ToolDetailSheet({
               </button>
             </div>
 
-            <p className="mt-3 whitespace-pre-wrap text-[15px] leading-relaxed text-ink-soft">{liveTool.howTo}</p>
+            <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink-soft">{liveTool.howTo}</p>
 
             <div className="mt-5 flex flex-wrap gap-2">
               {onStartGuided && (

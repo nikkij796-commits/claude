@@ -1,62 +1,91 @@
 import type { FeelingCore } from "../types";
 
 /**
- * A starter feelings wheel: 6 core feelings, each with a few more specific
- * secondary feelings, each with a few even more specific tertiary words.
- * Just vocabulary to help pin down what you're feeling — edit freely in
- * this file if particular words don't fit you.
+ * A starter feelings wheel: 7 core feelings, each with several more specific
+ * secondary feelings, each with a couple of even more specific tertiary
+ * words. Just vocabulary to help pin down what you're feeling — edit freely
+ * in this file if particular words don't fit you.
  */
 export const FEELINGS_WHEEL: FeelingCore[] = [
   {
     name: "Happy",
     color: "sage",
     secondary: [
-      { name: "Content", tertiary: ["Peaceful", "Relaxed", "Satisfied"] },
-      { name: "Joyful", tertiary: ["Excited", "Playful", "Optimistic"] },
-      { name: "Proud", tertiary: ["Confident", "Respected", "Successful"] },
+      { name: "Playful", tertiary: ["Aroused", "Cheeky"] },
+      { name: "Content", tertiary: ["Free", "Joyful"] },
+      { name: "Interested", tertiary: ["Curious", "Inquisitive"] },
+      { name: "Proud", tertiary: ["Successful", "Confident"] },
+      { name: "Accepted", tertiary: ["Respected", "Valued"] },
+      { name: "Powerful", tertiary: ["Courageous", "Creative"] },
+      { name: "Peaceful", tertiary: ["Loving", "Thankful"] },
+      { name: "Trusting", tertiary: ["Sensitive", "Intimate"] },
+      { name: "Optimistic", tertiary: ["Hopeful", "Inspired"] },
     ],
   },
   {
-    name: "Sad",
-    color: "sky",
+    name: "Surprised",
+    color: "amber",
     secondary: [
-      { name: "Lonely", tertiary: ["Isolated", "Distant", "Left out"] },
-      { name: "Hurt", tertiary: ["Disappointed", "Rejected", "Regretful"] },
-      { name: "Tired", tertiary: ["Drained", "Numb", "Withdrawn"] },
+      { name: "Startled", tertiary: ["Shocked", "Dismayed"] },
+      { name: "Confused", tertiary: ["Disillusioned", "Perplexed"] },
+      { name: "Amazed", tertiary: ["Astonished", "Awe"] },
+      { name: "Excited", tertiary: ["Eager", "Energetic"] },
+    ],
+  },
+  {
+    name: "Bad",
+    color: "slate",
+    secondary: [
+      { name: "Bored", tertiary: ["Indifferent", "Apathetic"] },
+      { name: "Busy", tertiary: ["Pressured", "Rushed"] },
+      { name: "Stressed", tertiary: ["Overwhelmed", "Uncontrolled"] },
+      { name: "Tired", tertiary: ["Sleepy", "Unfocused"] },
+    ],
+  },
+  {
+    name: "Fearful",
+    color: "lavender",
+    secondary: [
+      { name: "Scared", tertiary: ["Helpless", "Frightened"] },
+      { name: "Anxious", tertiary: ["Overwhelmed", "Worried"] },
+      { name: "Insecure", tertiary: ["Inadequate", "Inferior"] },
+      { name: "Weak", tertiary: ["Worthless", "Insignificant"] },
+      { name: "Rejected", tertiary: ["Excluded", "Persecuted"] },
+      { name: "Threatened", tertiary: ["Nervous", "Exposed"] },
     ],
   },
   {
     name: "Angry",
     color: "clay",
     secondary: [
-      { name: "Frustrated", tertiary: ["Stuck", "Irritated", "Impatient"] },
-      { name: "Resentful", tertiary: ["Betrayed", "Disrespected", "Bitter"] },
-      { name: "Defensive", tertiary: ["Threatened", "On edge", "Guarded"] },
-    ],
-  },
-  {
-    name: "Scared",
-    color: "lavender",
-    secondary: [
-      { name: "Anxious", tertiary: ["Worried", "Nervous", "Uneasy"] },
-      { name: "Overwhelmed", tertiary: ["Pressured", "Rushed", "Trapped"] },
-      { name: "Insecure", tertiary: ["Exposed", "Unsure", "Inadequate"] },
+      { name: "Let down", tertiary: ["Betrayed", "Resentful"] },
+      { name: "Humiliated", tertiary: ["Disrespected", "Ridiculed"] },
+      { name: "Bitter", tertiary: ["Indignant", "Violated"] },
+      { name: "Mad", tertiary: ["Jealous", "Provoked"] },
+      { name: "Aggressive", tertiary: ["Hostile", "Infuriated"] },
+      { name: "Frustrated", tertiary: ["Annoyed", "Withdrawn"] },
     ],
   },
   {
     name: "Disgusted",
-    color: "amber",
+    color: "rose",
     secondary: [
-      { name: "Uncomfortable", tertiary: ["Awkward", "Repelled", "Unsettled"] },
-      { name: "Disapproving", tertiary: ["Judgmental", "Skeptical", "Critical"] },
+      { name: "Disapproving", tertiary: ["Judgmental", "Embarrassed"] },
+      { name: "Disappointed", tertiary: ["Appalled", "Revolted"] },
+      { name: "Awful", tertiary: ["Nauseated", "Detestable"] },
+      { name: "Repelled", tertiary: ["Horrified", "Hesitant"] },
     ],
   },
   {
-    name: "Surprised",
-    color: "rose",
+    name: "Sad",
+    color: "sky",
     secondary: [
-      { name: "Startled", tertiary: ["Shocked", "Alarmed", "Confused"] },
-      { name: "Curious", tertiary: ["Intrigued", "Amazed", "Energized"] },
+      { name: "Lonely", tertiary: ["Isolated", "Abandoned"] },
+      { name: "Vulnerable", tertiary: ["Victimized", "Fragile"] },
+      { name: "Despair", tertiary: ["Grief", "Powerless"] },
+      { name: "Guilty", tertiary: ["Ashamed", "Remorseful"] },
+      { name: "Depressed", tertiary: ["Empty", "Inferior"] },
+      { name: "Hurt", tertiary: ["Disappointed", "Embarrassed"] },
     ],
   },
 ];

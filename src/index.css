@@ -22,9 +22,12 @@
   --color-rose-soft: #f1e0e1;
   --color-amber: #c7a458;
   --color-amber-soft: #f2e9d3;
+  --color-slate: #8f96a3;
+  --color-slate-soft: #e4e6ea;
 }
 
 html {
+  font-size: 17px;
   -webkit-tap-highlight-color: transparent;
 }
 

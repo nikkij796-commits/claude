@@ -19,7 +19,7 @@ export function NavBar({ current, onChange }: { current: ScreenId; onChange: (id
             <button
               key={tab.id}
               onClick={() => onChange(tab.id)}
-              className="flex flex-col items-center justify-center gap-1 py-2.5 text-[11px]"
+              className="flex flex-col items-center justify-center gap-1 py-2.5 text-xs"
               aria-current={active}
             >
               <span

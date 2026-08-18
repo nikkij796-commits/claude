@@ -76,7 +76,7 @@ export interface FeelingSecondary {
   tertiary: string[];
 }
 
-export type FeelingColor = "sage" | "lavender" | "clay" | "sky" | "rose" | "amber";
+export type FeelingColor = "sage" | "lavender" | "clay" | "sky" | "rose" | "amber" | "slate";
 
 export interface FeelingCore {
   name: string;

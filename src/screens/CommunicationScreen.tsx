@@ -63,7 +63,7 @@ function ScriptCard({ tool, onEdit }: { tool: Tool; onEdit: (tool: Tool, text: s
         </div>
       ) : (
         <>
-          <p className="mt-1.5 whitespace-pre-wrap text-sm leading-relaxed text-ink-soft">{tool.howTo}</p>
+          <p className="mt-1.5 whitespace-pre-wrap text-base leading-relaxed text-ink-soft">{tool.howTo}</p>
           <button onClick={() => setEditing(true)} className="mt-2 text-xs text-ink-faint">
             Edit script
           </button>
