@@ -7,6 +7,7 @@ import type {
   CustomTool,
   DayLog,
   JournalEntry,
+  Resource,
   Tool,
   ToolEdits,
 } from "../types";
@@ -16,6 +17,10 @@ function todayKey(d = new Date()): string {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
+}
+
+function dateKeyFromISO(iso: string): string {
+  return todayKey(new Date(iso));
 }
 
 function newId(): string {
@@ -39,6 +44,7 @@ interface AppDataValue {
 
   checkIns: CheckIn[];
   addCheckIn: (checkIn: Omit<CheckIn, "id" | "timestamp">) => void;
+  checkInsForDate: (date: string) => CheckIn[];
 
   dayLogs: Record<string, DayLog>;
   todayKeyStr: string;
@@ -50,6 +56,11 @@ interface AppDataValue {
   addJournalEntry: (entry: Omit<JournalEntry, "id" | "createdAt">) => void;
   updateJournalEntry: (id: string, patch: Partial<Pick<JournalEntry, "text" | "tags" | "date">>) => void;
   deleteJournalEntry: (id: string) => void;
+
+  resources: Resource[];
+  addResource: (resource: Omit<Resource, "id" | "createdAt">) => void;
+  updateResource: (id: string, patch: Partial<Pick<Resource, "title" | "body">>) => void;
+  deleteResource: (id: string) => void;
 }
 
 const AppDataContext = createContext<AppDataValue | null>(null);
@@ -65,6 +76,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [checkIns, setCheckIns] = useLocalStorage<CheckIn[]>("anxiety-toolkit:checkins", []);
   const [dayLogs, setDayLogs] = useLocalStorage<Record<string, DayLog>>("anxiety-toolkit:day-logs", {});
   const [journalEntries, setJournalEntries] = useLocalStorage<JournalEntry[]>("anxiety-toolkit:journal", []);
+  const [resources, setResources] = useLocalStorage<Resource[]>("anxiety-toolkit:resources", []);
 
   const tools = useMemo<Tool[]>(() => {
     const base = [...DEFAULT_TOOLS, ...customTools];
@@ -103,6 +115,8 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setCheckIns((prev) => [{ ...checkIn, id: newId(), timestamp: new Date().toISOString() }, ...prev].slice(0, 500));
   };
 
+  const checkInsForDate = (date: string) => checkIns.filter((c) => dateKeyFromISO(c.timestamp) === date);
+
   const getDayLog = (date: string) => dayLogs[date] ?? emptyDayLog(date);
 
   const updateDayLog: AppDataValue["updateDayLog"] = (date, patch) => {
@@ -130,6 +144,18 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setJournalEntries((prev) => prev.filter((e) => e.id !== id));
   };
 
+  const addResource: AppDataValue["addResource"] = (resource) => {
+    setResources((prev) => [{ ...resource, id: newId(), createdAt: new Date().toISOString() }, ...prev]);
+  };
+
+  const updateResource: AppDataValue["updateResource"] = (id, patch) => {
+    setResources((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  };
+
+  const deleteResource = (id: string) => {
+    setResources((prev) => prev.filter((r) => r.id !== id));
+  };
+
   const value: AppDataValue = {
     tools,
     toolsByCategory,
@@ -142,6 +168,7 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     removeCustomTool,
     checkIns,
     addCheckIn,
+    checkInsForDate,
     dayLogs,
     todayKeyStr: todayKey(),
     getDayLog,
@@ -151,6 +178,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     addJournalEntry,
     updateJournalEntry,
     deleteJournalEntry,
+    resources,
+    addResource,
+    updateResource,
+    deleteResource,
   };
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Intensity, Tool } from "../types";
 import { useAppData } from "../state/AppDataContext";
-import { IntensitySlider } from "../components/IntensitySlider";
+import { IntensitySlider, INTENSITY_LABELS } from "../components/IntensitySlider";
 import { ToolCard } from "../components/ToolCard";
 import { Button, Card, ScreenHeader } from "../components/ui";
 import { recommendTools } from "../lib/recommend";
@@ -13,12 +13,13 @@ export function HomeScreen({
   onOpenTool: (tool: Tool) => void;
   onStartGuided: () => void;
 }) {
-  const { tools, favorites, addCheckIn, checkIns } = useAppData();
+  const { tools, favorites, addCheckIn, checkIns, checkInsForDate, todayKeyStr } = useAppData();
   const [intensity, setIntensity] = useState<Intensity>(3);
   const [logged, setLogged] = useState(false);
 
   const recommended = useMemo(() => recommendTools(tools, intensity, favorites, 4), [tools, intensity, favorites]);
   const lastCheckIn = checkIns[0];
+  const todaysCheckIns = checkInsForDate(todayKeyStr);
 
   return (
     <div className="pb-28">
@@ -65,6 +66,34 @@ export function HomeScreen({
             <ToolCard key={tool.id} tool={tool} onOpen={onOpenTool} />
           ))}
         </div>
+
+        {todaysCheckIns.length > 0 && (
+          <>
+            <h2 className="mt-8 mb-3 text-sm font-medium text-ink-soft">Today</h2>
+            <Card className="p-2">
+              {todaysCheckIns.map((c, i) => (
+                <div
+                  key={c.id}
+                  className={`flex items-center justify-between gap-3 px-3 py-2.5 ${
+                    i > 0 ? "border-t border-black/5" : ""
+                  }`}
+                >
+                  <div>
+                    <span className="text-sm text-ink">
+                      {c.note ? c.note : INTENSITY_LABELS[c.intensity]}
+                    </span>
+                    {c.note && (
+                      <span className="ml-2 text-xs text-ink-faint">{INTENSITY_LABELS[c.intensity]}</span>
+                    )}
+                  </div>
+                  <span className="shrink-0 text-xs text-ink-faint">
+                    {new Date(c.timestamp).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
+                  </span>
+                </div>
+              ))}
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );

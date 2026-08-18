@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { Tool } from "../types";
 import { useAppData } from "../state/AppDataContext";
 import { Button } from "./ui";
+import { StructuredJournalForm } from "./StructuredJournalForm";
 
 export function ToolDetailSheet({
   tool,
@@ -16,6 +17,7 @@ export function ToolDetailSheet({
     useAppData();
   const liveTool = toolById(tool.id) ?? tool;
   const [editing, setEditing] = useState(false);
+  const [logging, setLogging] = useState(false);
   const [draftName, setDraftName] = useState(liveTool.name);
   const [draftHowTo, setDraftHowTo] = useState(liveTool.howTo);
 
@@ -57,6 +59,8 @@ export function ToolDetailSheet({
               </Button>
             </div>
           </div>
+        ) : logging ? (
+          <StructuredJournalForm tool={liveTool} onCancel={() => setLogging(false)} onSaved={onClose} />
         ) : (
           <>
             <div className="flex items-start justify-between gap-3">
@@ -75,6 +79,9 @@ export function ToolDetailSheet({
             <div className="mt-5 flex flex-wrap gap-2">
               {onStartGuided && (
                 <Button onClick={() => onStartGuided(liveTool)}>Guided version</Button>
+              )}
+              {liveTool.journalPrompts && (
+                <Button onClick={() => setLogging(true)}>Log entry</Button>
               )}
               <Button variant="secondary" onClick={() => toggleDayTool(todayKeyStr, liveTool.id)}>
                 {usedToday ? "✓ Used today" : "Mark used today"}

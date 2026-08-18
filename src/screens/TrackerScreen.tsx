@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useAppData } from "../state/AppDataContext";
 import { currentWeekDates, formatDayNumber } from "../lib/week";
 import { Card, ScreenHeader } from "../components/ui";
+import { INTENSITY_LABELS } from "../components/IntensitySlider";
 import type { Tool } from "../types";
 
 export function TrackerScreen() {
-  const { getDayLog, updateDayLog, toggleDayTool, tools, favorites, todayKeyStr } = useAppData();
+  const { getDayLog, updateDayLog, toggleDayTool, tools, favorites, todayKeyStr, checkInsForDate } = useAppData();
   const week = currentWeekDates();
   const [openDate, setOpenDate] = useState<string | null>(todayKeyStr);
 
@@ -75,6 +76,31 @@ export function TrackerScreen() {
                       rows={2}
                       className="w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm"
                     />
+
+                    {checkInsForDate(d.date).length > 0 && (
+                      <>
+                        <p className="mt-3 mb-1.5 text-xs font-medium text-ink-soft">Feelings logged</p>
+                        <div className="space-y-1">
+                          {checkInsForDate(d.date).map((c) => (
+                            <div key={c.id} className="flex items-center justify-between text-xs text-ink-soft">
+                              <span>
+                                {c.note ? c.note : INTENSITY_LABELS[c.intensity]}
+                                {c.note && (
+                                  <span className="ml-1.5 text-ink-faint">({INTENSITY_LABELS[c.intensity]})</span>
+                                )}
+                              </span>
+                              <span className="text-ink-faint">
+                                {new Date(c.timestamp).toLocaleTimeString([], {
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                })}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    )}
+
                     <p className="mt-3 mb-1.5 text-xs font-medium text-ink-soft">Tools used</p>
                     <div className="flex flex-wrap gap-1.5">
                       {quickTools.map((t) => {

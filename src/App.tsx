@@ -6,6 +6,7 @@ import { ToolkitScreen } from "./screens/ToolkitScreen";
 import { TrackerScreen } from "./screens/TrackerScreen";
 import { JournalScreen } from "./screens/JournalScreen";
 import { CommunicationScreen } from "./screens/CommunicationScreen";
+import { ResourcesScreen } from "./screens/ResourcesScreen";
 import { ToolDetailSheet } from "./components/ToolDetailSheet";
 import { GuidedMode } from "./components/GuidedMode";
 import type { Tool } from "./types";
@@ -31,6 +32,7 @@ function AppShell() {
       {screen === "tracker" && <TrackerScreen />}
       {screen === "journal" && <JournalScreen />}
       {screen === "communication" && <CommunicationScreen />}
+      {screen === "resources" && <ResourcesScreen />}
 
       <NavBar current={screen} onChange={setScreen} />
 

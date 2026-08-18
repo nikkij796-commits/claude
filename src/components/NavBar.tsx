@@ -1,4 +1,4 @@
-export type ScreenId = "home" | "toolkit" | "tracker" | "journal" | "communication";
+export type ScreenId = "home" | "toolkit" | "tracker" | "journal" | "communication" | "resources";
 
 const TABS: { id: ScreenId; label: string; icon: string }[] = [
   { id: "home", label: "Home", icon: "◎" },
@@ -6,19 +6,20 @@ const TABS: { id: ScreenId; label: string; icon: string }[] = [
   { id: "tracker", label: "Tracker", icon: "▦" },
   { id: "journal", label: "Journal", icon: "✎" },
   { id: "communication", label: "Talk", icon: "◐" },
+  { id: "resources", label: "More", icon: "✺" },
 ];
 
 export function NavBar({ current, onChange }: { current: ScreenId; onChange: (id: ScreenId) => void }) {
   return (
     <nav className="fixed bottom-0 inset-x-0 z-30 bg-paper/95 backdrop-blur border-t border-black/5 pb-[env(safe-area-inset-bottom)]">
-      <div className="mx-auto max-w-md grid grid-cols-5">
+      <div className="mx-auto max-w-md grid grid-cols-6">
         {TABS.map((tab) => {
           const active = tab.id === current;
           return (
             <button
               key={tab.id}
               onClick={() => onChange(tab.id)}
-              className="flex flex-col items-center justify-center gap-1 py-2.5 text-xs"
+              className="flex flex-col items-center justify-center gap-1 py-2.5 text-[11px]"
               aria-current={active}
             >
               <span

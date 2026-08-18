@@ -1,4 +1,4 @@
-import type { Category, Tool } from "../types";
+import type { Category, JournalPrompt, Tool } from "../types";
 
 /**
  * Starter toolkit data, transcribed from the user's handwritten toolkit.
@@ -36,12 +36,19 @@ export const CATEGORIES: Category[] = [
   },
 ];
 
-let n = 0;
-const id = (prefix: string) => `${prefix}-${++n}`;
+function slugify(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
 
+// Stable id (category + slugified name) rather than an incrementing counter,
+// so a user's saved favorites/tracker logs/journal tags don't shift when
+// tools are added, removed, or reordered above.
 function tool(categoryId: Tool["categoryId"], name: string, extra: Partial<Tool> = {}): Tool {
   return {
-    id: id(categoryId),
+    id: `${categoryId}-${slugify(name)}`,
     categoryId,
     name,
     howTo: PLACEHOLDER_HOWTO,
@@ -49,24 +56,46 @@ function tool(categoryId: Tool["categoryId"], name: string, extra: Partial<Tool>
   };
 }
 
+const CBT_PROMPTS: JournalPrompt[] = [
+  { key: "situation", label: "Situation", placeholder: "What happened?" },
+  { key: "thought", label: "Automatic thought", placeholder: "What went through your mind?" },
+  { key: "emotion", label: "Emotion(s) & intensity", placeholder: "e.g. anxious, 7/10" },
+  { key: "evidenceFor", label: "Evidence for the thought" },
+  { key: "evidenceAgainst", label: "Evidence against the thought" },
+  { key: "balanced", label: "A more balanced thought" },
+];
+
+const THOUGHTS_ON_TRIAL_PROMPTS: JournalPrompt[] = [
+  { key: "thought", label: "The thought on trial", placeholder: "What thought are you examining?" },
+  { key: "prosecution", label: "Evidence for the prosecution", placeholder: "What supports this thought?" },
+  { key: "defense", label: "Evidence for the defense", placeholder: "What argues against it?" },
+  { key: "verdict", label: "Verdict", placeholder: "What's a fairer conclusion?" },
+];
+
+const GRATITUDE_PROMPTS: JournalPrompt[] = [
+  { key: "one", label: "1." },
+  { key: "two", label: "2." },
+  { key: "three", label: "3." },
+];
+
 export const DEFAULT_TOOLS: Tool[] = [
   // 1. Predicting & Preventing
   tool("predicting", "Ins & outs"),
   tool("predicting", "Triggers"),
   tool("predicting", "Breath work", { guidedSeconds: 60 }),
   tool("predicting", "Take a break / walk away", { guidedSeconds: 90 }),
-  tool("predicting", "5-4-3-2-1 (PQ exercise)", { guidedSeconds: 90 }),
+  tool("predicting", "5-4-3-2-1 (PQ exercise)", { guidedSeconds: 5 * 60 }),
   tool("predicting", "Muscle relaxation", { guidedSeconds: 90 }),
-  tool("predicting", "Gratitude journaling"),
+  tool("predicting", "Gratitude journaling", { journalPrompts: GRATITUDE_PROMPTS }),
   tool("predicting", "Affirmations", { guidedSeconds: 60 }),
   tool("predicting", "List boundaries"),
 
   // 2. Identifying & Feeling
-  tool("identifying", "Reiki"),
+  tool("identifying", "Reiki", { guidedSeconds: 36 * 60 }),
   tool("identifying", "Abhishek"),
   tool("identifying", "Journaling / blue book"),
   tool("identifying", "Therapy"),
-  tool("identifying", "CBT"),
+  tool("identifying", "CBT", { journalPrompts: CBT_PROMPTS }),
   tool("identifying", "Ice cube", { guidedSeconds: 60 }),
   tool("identifying", "Talk it out"),
   tool("identifying", "Text it out"),
@@ -74,7 +103,7 @@ export const DEFAULT_TOOLS: Tool[] = [
   tool("identifying", "Reduce sensory inputs", { guidedSeconds: 90 }),
   tool("identifying", "Music", { guidedSeconds: 90 }),
   tool("identifying", "Clarify assumptions"),
-  tool("identifying", "Thoughts on trial"),
+  tool("identifying", "Thoughts on trial", { journalPrompts: THOUGHTS_ON_TRIAL_PROMPTS }),
 
   // 3. Self Care
   tool("selfcare", "Nutrition / water"),
@@ -90,7 +119,7 @@ export const DEFAULT_TOOLS: Tool[] = [
   tool("selfcare", "Walk"),
   tool("selfcare", "Talk to Nikki"),
   tool("selfcare", "Cuddles"),
-  tool("selfcare", "Go king"),
+  tool("selfcare", "Cooking"),
   tool("selfcare", "Screen break"),
   tool("selfcare", "Doodling"),
 

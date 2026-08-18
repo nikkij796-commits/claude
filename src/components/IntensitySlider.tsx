@@ -1,6 +1,6 @@
 import type { Intensity } from "../types";
 
-const LABELS: Record<Intensity, string> = {
+export const INTENSITY_LABELS: Record<Intensity, string> = {
   1: "Calm",
   2: "A little unsettled",
   3: "Noticeable",
@@ -31,7 +31,7 @@ export function IntensitySlider({
         <span>Calm</span>
         <span>Overwhelming</span>
       </div>
-      <p className="mt-2 text-center text-lg font-medium text-ink">{LABELS[value]}</p>
+      <p className="mt-2 text-center text-lg font-medium text-ink">{INTENSITY_LABELS[value]}</p>
     </div>
   );
 }

@@ -6,6 +6,12 @@ export interface Category {
   blurb: string;
 }
 
+export interface JournalPrompt {
+  key: string;
+  label: string;
+  placeholder?: string;
+}
+
 export interface Tool {
   id: string;
   categoryId: CategoryId;
@@ -16,6 +22,8 @@ export interface Tool {
   guidedSteps?: string[];
   /** Seconds for the guided-mode timer, when relevant. */
   guidedSeconds?: number;
+  /** When set, "Log entry" on this tool opens a structured journal form using these prompts instead of freeform text. */
+  journalPrompts?: JournalPrompt[];
 }
 
 export type Intensity = 1 | 2 | 3 | 4 | 5;
@@ -53,4 +61,25 @@ export interface ToolEdits {
 
 export interface CustomTool extends Tool {
   custom: true;
+}
+
+/** A user-added note in the Resources tab (links, articles, anything besides a coping tool). */
+export interface Resource {
+  id: string;
+  title: string;
+  body: string;
+  createdAt: string; // ISO
+}
+
+export interface FeelingSecondary {
+  name: string;
+  tertiary: string[];
+}
+
+export type FeelingColor = "sage" | "lavender" | "clay" | "sky" | "rose" | "amber";
+
+export interface FeelingCore {
+  name: string;
+  color: FeelingColor;
+  secondary: FeelingSecondary[];
 }
