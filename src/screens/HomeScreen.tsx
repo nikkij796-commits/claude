@@ -17,7 +17,7 @@ export function HomeScreen({
   const [intensity, setIntensity] = useState<Intensity>(2);
   const [logged, setLogged] = useState(false);
 
-  const recommended = useMemo(() => recommendTools(tools, intensity, favorites, 4), [tools, intensity, favorites]);
+  const recommended = useMemo(() => recommendTools(tools, intensity, favorites), [tools, intensity, favorites]);
   const lastCheckIn = checkIns[0];
   const todaysCheckIns = checkInsForDate(todayKeyStr);
 

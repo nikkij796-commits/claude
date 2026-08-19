@@ -27,7 +27,7 @@ export function GuidedMode({ onClose, startTool }: { onClose: () => void; startT
   const [running, setRunning] = useState(false);
 
   const recommended = useMemo(
-    () => recommendTools(tools, feeling?.intensity ?? 2, favorites, 5),
+    () => recommendTools(tools, feeling?.intensity ?? 2, favorites),
     [tools, feeling, favorites],
   );
 
