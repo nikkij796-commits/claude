@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AppDataProvider } from "./state/AppDataContext";
 import { NavBar, type ScreenId } from "./components/NavBar";
+import { LauncherScreen } from "./screens/LauncherScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { ToolkitScreen } from "./screens/ToolkitScreen";
 import { TrackerScreen } from "./screens/TrackerScreen";
@@ -11,14 +12,32 @@ import { ToolDetailSheet } from "./components/ToolDetailSheet";
 import { GuidedMode } from "./components/GuidedMode";
 import type { Tool } from "./types";
 
+type AppScreen = "launcher" | ScreenId;
+
 function AppShell() {
-  const [screen, setScreen] = useState<ScreenId>("home");
+  const [screen, setScreen] = useState<AppScreen>("launcher");
   const [openTool, setOpenTool] = useState<Tool | null>(null);
   const [guidedOpen, setGuidedOpen] = useState(false);
   const [guidedStartTool, setGuidedStartTool] = useState<Tool | undefined>(undefined);
 
+  if (screen === "launcher") {
+    return (
+      <div className="min-h-dvh mx-auto max-w-md">
+        <LauncherScreen onOpen={setScreen} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-dvh mx-auto max-w-md">
+      <button
+        onClick={() => setScreen("launcher")}
+        className="fixed right-4 top-4 z-30 flex h-9 w-9 items-center justify-center rounded-full bg-white/80 text-ink-soft shadow-sm border border-black/5"
+        aria-label="Back to app home"
+      >
+        ⌂
+      </button>
+
       {screen === "home" && (
         <HomeScreen
           onOpenTool={setOpenTool}
