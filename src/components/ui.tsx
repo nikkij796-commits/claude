@@ -1,18 +1,18 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useEffect, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 
 export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-2xl bg-white/70 border border-black/5 shadow-sm ${className}`}>{children}</div>
+    <div className={`rounded-2xl bg-white/70 border border-black/10 shadow-sm ${className}`}>{children}</div>
   );
 }
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger";
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-sage text-white active:bg-[#7a9877]",
-  secondary: "bg-sage-soft text-ink active:bg-[#cfe0cb]",
+  primary: "bg-sage text-white active:bg-[#4d664b]",
+  secondary: "bg-sage-soft text-ink active:bg-[#c8d8c3]",
   ghost: "bg-transparent text-ink-soft active:bg-black/5",
-  danger: "bg-clay-soft text-[#8a4a2a] active:bg-[#e8cbb0]",
+  danger: "bg-clay-soft text-rust active:bg-[#e9cdb5]",
 };
 
 export function Button({
@@ -47,12 +47,54 @@ export function Pill({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { active?: boolean }) {
   return (
     <button
+      aria-pressed={active}
       className={`whitespace-nowrap shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
         active ? "bg-sage text-white" : "bg-white/70 text-ink-soft border border-black/5"
       }`}
       {...rest}
     >
       {children}
+    </button>
+  );
+}
+
+/**
+ * A destructive action that requires a second tap to confirm — first tap
+ * turns the button into "Confirm delete?" for a few seconds; tapping again
+ * while armed actually deletes. Reverts on its own if left alone.
+ */
+export function ConfirmDeleteButton({
+  onConfirm,
+  label = "Delete",
+  className = "",
+  ...rest
+}: Omit<ButtonHTMLAttributes<HTMLButtonElement>, "onClick" | "children"> & {
+  onConfirm: () => void;
+  label?: string;
+}) {
+  const [armed, setArmed] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  }, []);
+
+  return (
+    <button
+      onClick={() => {
+        if (armed) {
+          if (timeoutRef.current) clearTimeout(timeoutRef.current);
+          setArmed(false);
+          onConfirm();
+          return;
+        }
+        setArmed(true);
+        timeoutRef.current = setTimeout(() => setArmed(false), 3000);
+      }}
+      className={`${armed ? "font-medium text-rust" : "text-ink-soft"} ${className}`}
+      {...rest}
+    >
+      {armed ? "Tap again to confirm" : label}
     </button>
   );
 }

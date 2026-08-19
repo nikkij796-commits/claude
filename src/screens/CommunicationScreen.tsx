@@ -19,6 +19,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={copy}
+      aria-live="polite"
       className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium ${
         copied ? "bg-sage text-white" : "bg-sky-soft text-ink-soft"
       }`}
@@ -64,7 +65,7 @@ function ScriptCard({ tool, onEdit }: { tool: Tool; onEdit: (tool: Tool, text: s
       ) : (
         <>
           <p className="mt-1.5 whitespace-pre-wrap text-base leading-relaxed text-ink-soft">{tool.howTo}</p>
-          <button onClick={() => setEditing(true)} className="mt-2 text-xs text-ink-faint">
+          <button onClick={() => setEditing(true)} className="mt-2 text-xs text-ink-soft">
             Edit script
           </button>
         </>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppData } from "../state/AppDataContext";
 import { FeelingsWheel } from "../components/FeelingsWheel";
-import { Button, Card, ScreenHeader } from "../components/ui";
+import { Button, Card, ConfirmDeleteButton, ScreenHeader } from "../components/ui";
 
 export function ResourcesScreen() {
   const { resources, addResource, updateResource, deleteResource } = useAppData();
@@ -43,12 +43,14 @@ export function ResourcesScreen() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Title"
+              aria-label="Resource title"
               className="w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm font-medium"
             />
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
               placeholder="Notes, a link, anything you want handy"
+              aria-label="Resource notes"
               rows={3}
               className="mt-2 w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm"
             />
@@ -90,11 +92,13 @@ function ResourceCard({
         <input
           value={draftTitle}
           onChange={(e) => setDraftTitle(e.target.value)}
+          aria-label="Resource title"
           className="w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm font-medium"
         />
         <textarea
           value={draftBody}
           onChange={(e) => setDraftBody(e.target.value)}
+          aria-label="Resource notes"
           rows={3}
           className="mt-2 w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm"
         />
@@ -111,9 +115,7 @@ function ResourceCard({
           <button onClick={() => setEditing(false)} className="text-xs text-ink-soft">
             Cancel
           </button>
-          <button onClick={onDelete} className="ml-auto text-xs text-[#8a4a2a]">
-            Delete
-          </button>
+          <ConfirmDeleteButton onConfirm={onDelete} className="ml-auto text-xs" />
         </div>
       </Card>
     );
@@ -123,7 +125,7 @@ function ResourceCard({
     <Card className="p-4">
       <div className="flex items-start justify-between gap-2">
         <span className="font-medium text-ink">{title}</span>
-        <button onClick={() => setEditing(true)} className="shrink-0 text-xs text-ink-faint">
+        <button onClick={() => setEditing(true)} className="shrink-0 text-xs text-ink-soft">
           Edit
         </button>
       </div>

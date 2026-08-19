@@ -1,16 +1,26 @@
 import { useState } from "react";
 import type { Intensity } from "../types";
 import { useAppData } from "../state/AppDataContext";
+import { useDialogA11y } from "../hooks/useDialogA11y";
 import { IntensitySlider } from "./IntensitySlider";
 import { Button } from "./ui";
 
 export function LogFeelingSheet({ word, onClose }: { word: string; onClose: () => void }) {
   const { addCheckIn } = useAppData();
   const [intensity, setIntensity] = useState<Intensity>(2);
+  const dialogRef = useDialogA11y(onClose);
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/30" onClick={onClose}>
-      <div className="w-full max-w-md rounded-t-3xl bg-paper p-5 pb-8" onClick={(e) => e.stopPropagation()}>
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Log feeling: ${word}`}
+        tabIndex={-1}
+        className="w-full max-w-md rounded-t-3xl bg-paper p-5 pb-8 outline-none"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-black/10" />
         <h2 className="text-lg font-semibold text-ink">Feeling {word.toLowerCase()}</h2>
         <p className="mt-1 text-sm text-ink-soft">How strong is it right now?</p>

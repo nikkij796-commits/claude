@@ -22,7 +22,7 @@ export function LauncherScreen({ onOpen }: { onOpen: (screen: ScreenId) => void 
           <button
             key={link.id}
             onClick={() => onOpen(link.id)}
-            className="flex flex-col items-start gap-2 rounded-2xl bg-white/70 border border-black/5 p-5 text-left shadow-sm active:scale-[0.98] transition-transform"
+            className="flex flex-col items-start gap-2 rounded-2xl bg-white/70 border border-black/10 p-5 text-left shadow-sm active:scale-[0.98] transition-transform"
           >
             <span className="text-2xl text-sage" aria-hidden>
               {link.icon}

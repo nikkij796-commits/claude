@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import type { FeelingColor } from "../types";
 import { FEELINGS_WHEEL } from "../data/feelingsWheel";
 import { donutSegmentPath, polarToCartesian, radialLabelTransform, splitAngle } from "../lib/wheelGeometry";
+import { useDialogA11y } from "../hooks/useDialogA11y";
 import { LogFeelingSheet } from "./LogFeelingSheet";
 
 const FILL: Record<FeelingColor, string> = {
@@ -186,16 +187,24 @@ export function FeelingsWheelFull({ onClose }: { onClose: () => void }) {
   const [logging, setLogging] = useState<string | null>(null);
 
   const title = useMemo(() => focusedCore ?? "Feelings wheel", [focusedCore]);
+  const dialogRef = useDialogA11y(onClose);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-paper">
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Feelings wheel"
+      tabIndex={-1}
+      className="fixed inset-0 z-50 flex flex-col bg-paper outline-none"
+    >
       <div className="flex items-center justify-between px-5 pt-6 pb-2">
         {focusedCore ? (
           <button onClick={() => setFocusedCore(null)} className="text-sm text-ink-soft">
             ‹ All feelings
           </button>
         ) : (
-          <span className="text-sm text-ink-faint">Tap a core feeling to zoom in</span>
+          <span className="text-sm text-ink-soft">Tap a core feeling to zoom in</span>
         )}
         <button onClick={onClose} className="text-sm text-ink-soft" aria-label="Close">
           Close

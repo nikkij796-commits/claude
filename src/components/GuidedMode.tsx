@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Intensity, Tool } from "../types";
 import { useAppData } from "../state/AppDataContext";
+import { useDialogA11y } from "../hooks/useDialogA11y";
 import { recommendTools } from "../lib/recommend";
 import { Button, Pill } from "./ui";
 
@@ -67,10 +68,19 @@ export function GuidedMode({ onClose, startTool }: { onClose: () => void; startT
   const ss = String(secondsLeft % 60).padStart(2, "0");
   const progress = totalSeconds > 0 ? 1 - secondsLeft / totalSeconds : 1;
 
+  const dialogRef = useDialogA11y(onClose);
+
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-paper">
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Guided coping session"
+      tabIndex={-1}
+      className="fixed inset-0 z-50 flex flex-col bg-paper outline-none"
+    >
       <div className="flex items-center justify-between px-5 pt-6">
-        <span className="text-sm text-ink-faint">
+        <span className="text-sm text-ink-soft">
           {phase === "feeling" && "Step 1 of 3"}
           {phase === "tool" && "Step 2 of 3"}
           {(phase === "timer" || phase === "done") && "Step 3 of 3"}
@@ -107,7 +117,7 @@ export function GuidedMode({ onClose, startTool }: { onClose: () => void; startT
                 <button
                   key={t.id}
                   onClick={() => pickTool(t)}
-                  className="w-full rounded-2xl bg-white/70 border border-black/5 p-4 text-left text-ink font-medium active:scale-[0.99] transition-transform"
+                  className="w-full rounded-2xl bg-white/70 border border-black/10 p-4 text-left text-ink font-medium active:scale-[0.99] transition-transform"
                 >
                   {t.name}
                 </button>

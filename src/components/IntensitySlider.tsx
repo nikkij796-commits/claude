@@ -22,10 +22,11 @@ export function IntensitySlider({
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value) as Intensity)}
-        className="w-full accent-[#8ba888] h-2"
+        className="w-full accent-[var(--color-sage)] h-2"
         aria-label="Anxiety intensity"
+        aria-valuetext={INTENSITY_LABELS[value]}
       />
-      <div className="mt-3 flex items-center justify-between text-xs text-ink-faint">
+      <div className="mt-3 flex items-center justify-between text-xs text-ink-soft">
         <span>Calm</span>
         <span>Overwhelming</span>
       </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Intensity, Tool } from "../types";
 import { useAppData } from "../state/AppDataContext";
+import { useDialogA11y } from "../hooks/useDialogA11y";
 import { Button } from "./ui";
 import { StructuredJournalForm } from "./StructuredJournalForm";
 
@@ -42,10 +43,17 @@ export function ToolDetailSheet({
     setEditing(false);
   };
 
+  const dialogRef = useDialogA11y(onClose);
+
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/30" onClick={onClose}>
       <div
-        className="w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-3xl bg-paper p-5 pb-8"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`${liveTool.name} details`}
+        tabIndex={-1}
+        className="w-full max-w-md max-h-[85vh] overflow-y-auto rounded-t-3xl bg-paper p-5 pb-8 outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-black/10" />
@@ -55,12 +63,14 @@ export function ToolDetailSheet({
             <input
               value={draftName}
               onChange={(e) => setDraftName(e.target.value)}
+              aria-label="Tool name"
               className="w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-lg font-semibold"
             />
             <textarea
               value={draftHowTo}
               onChange={(e) => setDraftHowTo(e.target.value)}
               rows={5}
+              aria-label="How you use this tool"
               className="w-full rounded-xl border border-black/10 bg-white/80 px-3 py-2 text-sm"
               placeholder="How do you use this tool?"
             />
@@ -79,8 +89,9 @@ export function ToolDetailSheet({
               <h2 className="text-xl font-semibold text-ink">{liveTool.name}</h2>
               <button
                 onClick={() => toggleFavorite(liveTool.id)}
-                className={`shrink-0 text-2xl leading-none ${isFav ? "text-clay" : "text-ink-faint"}`}
+                className={`shrink-0 text-2xl leading-none ${isFav ? "text-clay" : "text-ink-soft"}`}
                 aria-label={isFav ? "Unpin" : "Pin"}
+                aria-pressed={isFav}
               >
                 {isFav ? "★" : "☆"}
               </button>
@@ -96,6 +107,7 @@ export function ToolDetailSheet({
                   <button
                     key={chip.level}
                     onClick={() => toggleMood(chip.level)}
+                    aria-pressed={active}
                     className={`rounded-full px-3 py-1.5 text-sm ${
                       active ? "bg-sage text-white" : "bg-white/70 border border-black/10 text-ink-soft"
                     }`}
@@ -113,7 +125,11 @@ export function ToolDetailSheet({
               {liveTool.journalPrompts && (
                 <Button onClick={() => setLogging(true)}>Log entry</Button>
               )}
-              <Button variant="secondary" onClick={() => toggleDayTool(todayKeyStr, liveTool.id)}>
+              <Button
+                variant="secondary"
+                onClick={() => toggleDayTool(todayKeyStr, liveTool.id)}
+                aria-pressed={usedToday}
+              >
                 {usedToday ? "✓ Used today" : "Mark used today"}
               </Button>
               <Button variant="ghost" onClick={() => setEditing(true)}>
@@ -127,7 +143,7 @@ export function ToolDetailSheet({
                   removeCustomTool(liveTool.id);
                   onClose();
                 }}
-                className="mt-4 text-sm text-[#8a4a2a]"
+                className="mt-4 text-sm text-rust"
               >
                 Remove this tool
               </button>

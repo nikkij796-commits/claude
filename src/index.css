@@ -10,20 +10,30 @@
   --color-ink-soft: #6b6459;
   --color-ink-faint: #9b9488;
 
-  --color-sage: #8ba888;
+  /*
+   * Solid accent tones are deliberately deeper than they might look at a
+   * glance — the original lighter values (sage #8ba888, lavender #a79bc4,
+   * etc.) all failed WCAG AA (~2.5:1) against the white text/icons layered
+   * on top of them everywhere: buttons, active nav/pills, the feelings
+   * wheel. These darkened versions clear 4.5:1 against white while keeping
+   * the same hue/softness. The "-soft" tints are unchanged — they're only
+   * ever paired with dark ink text, which already passes comfortably.
+   */
+  --color-sage: #5f7e5c;
   --color-sage-soft: #dfe8dc;
-  --color-lavender: #a79bc4;
+  --color-lavender: #7d6ba8;
   --color-lavender-soft: #e9e4f2;
-  --color-clay: #c98f6e;
+  --color-clay: #a7643e;
   --color-clay-soft: #f2e2d4;
-  --color-sky: #83a6b3;
+  --color-sky: #557c8a;
   --color-sky-soft: #dfeaee;
-  --color-rose: #c58f95;
+  --color-rose: #ad6068;
   --color-rose-soft: #f1e0e1;
-  --color-amber: #c7a458;
+  --color-amber: #8e7130;
   --color-amber-soft: #f2e9d3;
-  --color-slate: #8f96a3;
+  --color-slate: #6e7786;
   --color-slate-soft: #e4e6ea;
+  --color-rust: #8a4a2a;
 }
 
 html {
@@ -45,6 +55,26 @@ body {
 
 button {
   font-family: inherit;
+}
+
+/* Visible keyboard-focus indicator — the app had none, which left keyboard
+   users with no reliable way to see where they were. Scoped to
+   :focus-visible so it only shows for keyboard/switch navigation, not
+   every mouse/touch tap. Uses a two-tone box-shadow ring (rather than
+   `outline`, whose color otherwise resolves to `currentColor` on
+   white-text buttons here) so it stays visible against every button
+   background in the palette, light or dark, and naturally follows each
+   element's own border-radius. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--color-paper),
+    0 0 0 4px var(--color-ink);
 }
 
 /* Respect reduced-motion preference; keep motion minimal regardless */

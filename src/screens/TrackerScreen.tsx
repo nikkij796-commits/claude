@@ -36,36 +36,38 @@ export function TrackerScreen() {
             const isOpen = openDate === d.date;
             return (
               <Card key={d.date} className={d.isToday ? "border-sage/40" : ""}>
-                <button
-                  className="w-full flex items-center gap-3 p-4"
-                  onClick={() => setOpenDate(isOpen ? null : d.date)}
-                >
-                  <span
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      updateDayLog(d.date, { checked: !log.checked });
-                    }}
-                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-sm ${
+                <div className="flex items-center gap-2 py-1 pl-1.5 pr-2">
+                  <button
+                    onClick={() => updateDayLog(d.date, { checked: !log.checked })}
+                    aria-pressed={log.checked}
+                    aria-label={`Mark ${d.label} ${formatDayNumber(d.date)} as ${log.checked ? "not done" : "done"}`}
+                    className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm ${
                       log.checked
                         ? "bg-sage border-sage text-white"
-                        : "border-black/15 text-transparent"
+                        : "border-black/15 text-transparent active:bg-black/5"
                     }`}
                   >
                     ✓
-                  </span>
-                  <div className="flex-1 text-left">
-                    <span className={`font-medium ${d.isToday ? "text-ink" : "text-ink-soft"}`}>
-                      {d.label} {formatDayNumber(d.date)}
-                      {d.isToday && <span className="ml-2 text-xs text-sage">today</span>}
-                    </span>
-                    {log.toolIds.length > 0 && (
-                      <p className="mt-0.5 text-xs text-ink-faint">
-                        {log.toolIds.length} tool{log.toolIds.length === 1 ? "" : "s"} used
-                      </p>
-                    )}
-                  </div>
-                  <span className="text-ink-faint text-sm">{isOpen ? "−" : "+"}</span>
-                </button>
+                  </button>
+                  <button
+                    className="flex flex-1 items-center gap-3 py-3 text-left"
+                    onClick={() => setOpenDate(isOpen ? null : d.date)}
+                    aria-expanded={isOpen}
+                  >
+                    <div className="flex-1">
+                      <span className={`font-medium ${d.isToday ? "text-ink" : "text-ink-soft"}`}>
+                        {d.label} {formatDayNumber(d.date)}
+                        {d.isToday && <span className="ml-2 text-xs text-sage">today</span>}
+                      </span>
+                      {log.toolIds.length > 0 && (
+                        <p className="mt-0.5 text-xs text-ink-soft">
+                          {log.toolIds.length} tool{log.toolIds.length === 1 ? "" : "s"} used
+                        </p>
+                      )}
+                    </div>
+                    <span className="text-ink-soft text-sm">{isOpen ? "−" : "+"}</span>
+                  </button>
+                </div>
 
                 {isOpen && (
                   <div className="px-4 pb-4">
@@ -86,10 +88,10 @@ export function TrackerScreen() {
                               <span>
                                 {c.note ? c.note : INTENSITY_LABELS[c.intensity]}
                                 {c.note && (
-                                  <span className="ml-1.5 text-ink-faint">({INTENSITY_LABELS[c.intensity]})</span>
+                                  <span className="ml-1.5 text-ink-soft">({INTENSITY_LABELS[c.intensity]})</span>
                                 )}
                               </span>
-                              <span className="text-ink-faint">
+                              <span className="text-ink-soft">
                                 {new Date(c.timestamp).toLocaleTimeString([], {
                                   hour: "numeric",
                                   minute: "2-digit",
@@ -109,6 +111,7 @@ export function TrackerScreen() {
                           <button
                             key={t.id}
                             onClick={() => toggleDayTool(d.date, t.id)}
+                            aria-pressed={active}
                             className={`rounded-full px-3 py-1.5 text-xs ${
                               active ? "bg-sage text-white" : "bg-white/70 border border-black/10 text-ink-soft"
                             }`}

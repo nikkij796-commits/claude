@@ -23,12 +23,12 @@ export function NavBar({ current, onChange }: { current: ScreenId; onChange: (id
               aria-current={active}
             >
               <span
-                className={`text-lg leading-none ${active ? "text-sage" : "text-ink-faint"}`}
+                className={`text-lg leading-none ${active ? "text-sage" : "text-ink-soft"}`}
                 aria-hidden
               >
                 {tab.icon}
               </span>
-              <span className={active ? "text-ink font-medium" : "text-ink-faint"}>{tab.label}</span>
+              <span className={active ? "text-ink font-medium" : "text-ink-soft"}>{tab.label}</span>
             </button>
           );
         })}

@@ -31,6 +31,7 @@ export function HomeScreen({
           <Button
             className="mt-5 w-full"
             variant={logged ? "secondary" : "primary"}
+            aria-live="polite"
             onClick={() => {
               addCheckIn({ intensity });
               setLogged(true);
@@ -42,7 +43,7 @@ export function HomeScreen({
         </Card>
 
         {lastCheckIn && (
-          <p className="mt-3 text-center text-xs text-ink-faint">
+          <p className="mt-3 text-center text-xs text-ink-soft">
             Last check-in {new Date(lastCheckIn.timestamp).toLocaleString([], {
               weekday: "short",
               hour: "numeric",
@@ -83,10 +84,10 @@ export function HomeScreen({
                       {c.note ? c.note : INTENSITY_LABELS[c.intensity]}
                     </span>
                     {c.note && (
-                      <span className="ml-2 text-xs text-ink-faint">{INTENSITY_LABELS[c.intensity]}</span>
+                      <span className="ml-2 text-xs text-ink-soft">{INTENSITY_LABELS[c.intensity]}</span>
                     )}
                   </div>
-                  <span className="shrink-0 text-xs text-ink-faint">
+                  <span className="shrink-0 text-xs text-ink-soft">
                     {new Date(c.timestamp).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}
                   </span>
                 </div>
