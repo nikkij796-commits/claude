@@ -59,7 +59,7 @@ function tool(categoryId: Tool["categoryId"], name: string, extra: Partial<Tool>
 }
 
 // The classic 5-step CBT thought record.
-const CBT_PROMPTS: JournalPrompt[] = [
+export const CBT_PROMPTS: JournalPrompt[] = [
   { key: "situation", label: "Situation", placeholder: "What happened?" },
   { key: "thought", label: "Automatic thought", placeholder: "What went through your mind?" },
   { key: "feeling", label: "Feeling & intensity", placeholder: "e.g. anxious, 7/10" },
@@ -75,14 +75,14 @@ const CBT_PROMPTS: JournalPrompt[] = [
   },
 ];
 
-const THOUGHTS_ON_TRIAL_PROMPTS: JournalPrompt[] = [
+export const THOUGHTS_ON_TRIAL_PROMPTS: JournalPrompt[] = [
   { key: "thought", label: "The thought on trial", placeholder: "What thought are you examining?" },
   { key: "prosecution", label: "Evidence for the prosecution", placeholder: "What supports this thought?" },
   { key: "defense", label: "Evidence for the defense", placeholder: "What argues against it?" },
   { key: "verdict", label: "Verdict", placeholder: "What's a fairer conclusion?" },
 ];
 
-const GRATITUDE_PROMPTS: JournalPrompt[] = [
+export const GRATITUDE_PROMPTS: JournalPrompt[] = [
   { key: "one", label: "1." },
   { key: "two", label: "2." },
   { key: "three", label: "3." },
