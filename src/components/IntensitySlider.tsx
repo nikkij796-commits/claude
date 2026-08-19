@@ -2,10 +2,8 @@ import type { Intensity } from "../types";
 
 export const INTENSITY_LABELS: Record<Intensity, string> = {
   1: "Calm",
-  2: "A little unsettled",
-  3: "Noticeable",
-  4: "High",
-  5: "Overwhelming",
+  2: "Stressed",
+  3: "Overwhelming",
 };
 
 export function IntensitySlider({
@@ -20,7 +18,7 @@ export function IntensitySlider({
       <input
         type="range"
         min={1}
-        max={5}
+        max={3}
         step={1}
         value={value}
         onChange={(e) => onChange(Number(e.target.value) as Intensity)}

@@ -6,7 +6,7 @@ import { Button } from "./ui";
 
 export function LogFeelingSheet({ word, onClose }: { word: string; onClose: () => void }) {
   const { addCheckIn } = useAppData();
-  const [intensity, setIntensity] = useState<Intensity>(3);
+  const [intensity, setIntensity] = useState<Intensity>(2);
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/30" onClick={onClose}>

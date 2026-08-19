@@ -14,7 +14,7 @@ export function HomeScreen({
   onStartGuided: () => void;
 }) {
   const { tools, favorites, addCheckIn, checkIns, checkInsForDate, todayKeyStr } = useAppData();
-  const [intensity, setIntensity] = useState<Intensity>(3);
+  const [intensity, setIntensity] = useState<Intensity>(2);
   const [logged, setLogged] = useState(false);
 
   const recommended = useMemo(() => recommendTools(tools, intensity, favorites, 4), [tools, intensity, favorites]);

@@ -28,7 +28,8 @@ export interface Tool {
   moods?: Intensity[];
 }
 
-export type Intensity = 1 | 2 | 3 | 4 | 5;
+// 1 = Calm, 2 = Stressed, 3 = Overwhelming.
+export type Intensity = 1 | 2 | 3;
 
 export interface CheckIn {
   id: string;

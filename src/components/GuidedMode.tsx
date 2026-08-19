@@ -6,11 +6,11 @@ import { Button, Pill } from "./ui";
 
 const FEELINGS: { label: string; intensity: Intensity }[] = [
   { label: "A little unsettled", intensity: 2 },
-  { label: "Anxious", intensity: 3 },
-  { label: "Racing thoughts", intensity: 4 },
-  { label: "Overwhelmed", intensity: 4 },
-  { label: "Panicky", intensity: 5 },
-  { label: "Not sure — just off", intensity: 3 },
+  { label: "Anxious", intensity: 2 },
+  { label: "Not sure — just off", intensity: 2 },
+  { label: "Racing thoughts", intensity: 3 },
+  { label: "Overwhelmed", intensity: 3 },
+  { label: "Panicky", intensity: 3 },
 ];
 
 type Phase = "feeling" | "tool" | "timer" | "done";
@@ -26,7 +26,7 @@ export function GuidedMode({ onClose, startTool }: { onClose: () => void; startT
   const [running, setRunning] = useState(false);
 
   const recommended = useMemo(
-    () => recommendTools(tools, feeling?.intensity ?? 3, favorites, 5),
+    () => recommendTools(tools, feeling?.intensity ?? 2, favorites, 5),
     [tools, feeling, favorites],
   );
 
@@ -51,7 +51,7 @@ export function GuidedMode({ onClose, startTool }: { onClose: () => void; startT
   const finish = (feltBetter: boolean) => {
     if (selectedTool) toggleDayToolIfNotAlready(selectedTool.id);
     addCheckIn({
-      intensity: feeling?.intensity ?? 3,
+      intensity: feeling?.intensity ?? 2,
       note: [feeling?.label, selectedTool?.name, feltBetter ? "felt better after" : undefined]
         .filter(Boolean)
         .join(" · "),

@@ -43,16 +43,18 @@ function slugify(name: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-// Stable id (category + slugified name) rather than an incrementing counter,
-// so a user's saved favorites/tracker logs/journal tags don't shift when
-// tools are added, removed, or reordered above.
+// Stable id (category + slugified name, or an explicit `extra.id` override)
+// rather than an incrementing counter, so a user's saved favorites/tracker
+// logs/journal tags don't shift when tools are added, removed, reordered,
+// or renamed above — pass `id` in `extra` when renaming a tool so it keeps
+// its original identity.
 function tool(categoryId: Tool["categoryId"], name: string, extra: Partial<Tool> = {}): Tool {
   return {
-    id: `${categoryId}-${slugify(name)}`,
     categoryId,
     name,
     howTo: PLACEHOLDER_HOWTO,
     ...extra,
+    id: extra.id ?? `${categoryId}-${slugify(name)}`,
   };
 }
 
@@ -88,24 +90,25 @@ const GRATITUDE_PROMPTS: JournalPrompt[] = [
 
 /**
  * Starter "might help right now" moods per tool — which check-in
- * intensities each tool gets suggested for on the Home screen. Fully
- * editable in the app (open a tool, tap a mood chip), this is just the
- * starting point:
+ * intensities (1 Calm, 2 Stressed, 3 Overwhelming) each tool gets
+ * suggested for on the Home screen. Fully editable in the app (open a
+ * tool, tap a mood chip), this is just the starting point:
  * - the four grounding/in-the-moment predicting tools + everything in
- *   Identifying & Feeling cover Overwhelming (5)
- * - the rest of Predicting & Preventing is preventive/planning-oriented,
- *   so it stops at High (4) and doesn't show up under Overwhelming
- * - Self Care leans toward the calmer end (1-3)
+ *   Identifying & Feeling cover Stressed and Overwhelming
+ * - the rest of Predicting & Preventing is preventive/planning-oriented —
+ *   it only shows up under Calm
+ * - Self Care covers Calm and Stressed, stepping back once things tip
+ *   into Overwhelming
  */
-const MOODS_GROUNDING: Intensity[] = [2, 3, 4, 5];
-const MOODS_PREVENTIVE: Intensity[] = [1, 2, 3, 4];
-const MOODS_IDENTIFYING: Intensity[] = [3, 4, 5];
-const MOODS_SELFCARE: Intensity[] = [1, 2, 3];
+const MOODS_GROUNDING: Intensity[] = [2, 3];
+const MOODS_PREVENTIVE: Intensity[] = [1];
+const MOODS_IDENTIFYING: Intensity[] = [2, 3];
+const MOODS_SELFCARE: Intensity[] = [1, 2];
 
 export const DEFAULT_TOOLS: Tool[] = [
   // 1. Predicting & Preventing
-  tool("predicting", "Ins & outs", { moods: MOODS_PREVENTIVE }),
-  tool("predicting", "Triggers", { moods: MOODS_PREVENTIVE }),
+  tool("predicting", "Start Stop Continue", { id: "predicting-ins-outs", moods: MOODS_PREVENTIVE }),
+  tool("predicting", "Identify Triggers", { id: "predicting-triggers", moods: MOODS_PREVENTIVE }),
   tool("predicting", "Breath work", { guidedSeconds: 60, moods: MOODS_GROUNDING }),
   tool("predicting", "Take a break / walk away", { guidedSeconds: 90, moods: MOODS_GROUNDING }),
   tool("predicting", "5-4-3-2-1 (PQ exercise)", { guidedSeconds: 5 * 60, moods: MOODS_GROUNDING }),

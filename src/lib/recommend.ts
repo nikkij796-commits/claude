@@ -1,27 +1,39 @@
 import type { CategoryId, Intensity, Tool } from "../types";
 
 /**
- * Category fallback order, used only to fill out remaining slots when a
- * mood-tagged pool comes up short (e.g. for custom tools that haven't been
- * assigned a mood yet). Higher intensity leans on grounding-in-the-moment
- * categories first; lower intensity leans on maintenance.
+ * Category priority per intensity — used both to break ties within the
+ * mood-tagged pool (so e.g. Overwhelming leans on grounding tools first
+ * while Stressed leans on reflection tools first, even though both moods
+ * can include the same tools) and as a fallback to fill remaining slots
+ * for untagged tools.
  */
 function categoryPriority(intensity: Intensity): CategoryId[] {
-  if (intensity >= 4) return ["predicting", "identifying", "selfcare"];
-  if (intensity === 3) return ["identifying", "selfcare", "predicting"];
-  return ["selfcare", "predicting", "identifying"];
+  if (intensity === 3) return ["predicting", "identifying", "selfcare"];
+  if (intensity === 2) return ["identifying", "predicting", "selfcare"];
+  return ["predicting", "selfcare", "identifying"];
 }
 
-function favoritesFirst(tools: Tool[], favSet: Set<string>): Tool[] {
-  return [...tools].sort((a, b) => Number(favSet.has(b.id)) - Number(favSet.has(a.id)));
+function sortForIntensity(tools: Tool[], intensity: Intensity, favSet: Set<string>): Tool[] {
+  const order = categoryPriority(intensity);
+  const rank = (categoryId: CategoryId) => {
+    const i = order.indexOf(categoryId);
+    return i === -1 ? Infinity : i; // categories outside the priority list (e.g. Communication) sort last
+  };
+  return [...tools].sort((a, b) => {
+    const favDiff = Number(favSet.has(b.id)) - Number(favSet.has(a.id));
+    if (favDiff !== 0) return favDiff;
+    return rank(a.categoryId) - rank(b.categoryId);
+  });
 }
 
 /**
  * "Might help right now" picks. Primarily driven by each tool's own
  * `moods` tags (set via the mood chips on a tool's detail sheet, so this is
- * fully user-customizable) — favorites among the matching tools come
- * first. Falls back to a category-based guess to fill any remaining slots,
- * for tools that haven't been tagged with a mood yet.
+ * fully user-customizable) — favorites come first, then a category lean
+ * that shifts with intensity (Overwhelming favors grounding tools,
+ * Stressed favors reflection tools, Calm favors self care/preventive
+ * tools). Falls back to a plain category-based guess to fill any
+ * remaining slots, for tools that haven't been tagged with a mood yet.
  */
 export function recommendTools(
   tools: Tool[],
@@ -33,19 +45,18 @@ export function recommendTools(
   const picked: Tool[] = [];
 
   const tagged = tools.filter((t) => t.moods?.includes(intensity));
-  for (const t of favoritesFirst(tagged, favSet)) {
+  for (const t of sortForIntensity(tagged, intensity, favSet)) {
     if (picked.length >= count) break;
     picked.push(t);
   }
 
   if (picked.length < count) {
-    for (const categoryId of categoryPriority(intensity)) {
-      const inCategory = tools.filter((t) => t.categoryId === categoryId && !picked.some((p) => p.id === t.id));
-      for (const t of favoritesFirst(inCategory, favSet)) {
-        if (picked.length >= count) break;
-        picked.push(t);
-      }
+    const untagged = tools.filter(
+      (t) => t.categoryId !== "communication" && !picked.some((p) => p.id === t.id),
+    );
+    for (const t of sortForIntensity(untagged, intensity, favSet)) {
       if (picked.length >= count) break;
+      picked.push(t);
     }
   }
 

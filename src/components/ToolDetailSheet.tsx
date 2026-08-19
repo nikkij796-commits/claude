@@ -6,10 +6,8 @@ import { StructuredJournalForm } from "./StructuredJournalForm";
 
 const MOOD_CHIPS: { level: Intensity; label: string }[] = [
   { level: 1, label: "Calm" },
-  { level: 2, label: "Unsettled" },
-  { level: 3, label: "Noticeable" },
-  { level: 4, label: "High" },
-  { level: 5, label: "Overwhelming" },
+  { level: 2, label: "Stressed" },
+  { level: 3, label: "Overwhelming" },
 ];
 
 export function ToolDetailSheet({
