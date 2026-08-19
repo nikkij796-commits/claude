@@ -44,6 +44,25 @@ export interface ToolListItem {
 // 1 = Calm, 2 = Stressed, 3 = Overwhelming.
 export type Intensity = 1 | 2 | 3;
 
+/**
+ * Clamps any stored number into a valid Intensity. Needed because the app
+ * briefly shipped a 5-level scale (1 Calm, 2 Unsettled, 3 Noticeable, 4
+ * High, 5 Overwhelming) before settling on this 3-level one — any mood tag
+ * or check-in saved to a browser during that window would otherwise sit
+ * outside the current 1-3 range forever, silently never matching anything.
+ *
+ * This is a boundary clamp, not a semantic remap: 1-3 already mean exactly
+ * what they mean today and pass through unchanged (a value of 3 is a
+ * legitimate, current "Overwhelming" and must stay 3, not get pulled down
+ * to 2). Only the genuinely out-of-range legacy values 4 and 5 — which
+ * can't be anything but leftovers from the old scale — collapse to 3.
+ */
+export function normalizeIntensity(n: number): Intensity {
+  if (n <= 1) return 1;
+  if (n >= 3) return 3;
+  return 2;
+}
+
 export interface CheckIn {
   id: string;
   timestamp: string; // ISO

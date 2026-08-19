@@ -12,6 +12,7 @@ import type {
   ToolEdits,
   ToolListItem,
 } from "../types";
+import { normalizeIntensity } from "../types";
 
 function todayKey(d = new Date()): string {
   const y = d.getFullYear();
@@ -78,7 +79,14 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [toolEdits, setToolEdits] = useLocalStorage<ToolEdits>("anxiety-toolkit:tool-edits", {});
   const [customTools, setCustomTools] = useLocalStorage<CustomTool[]>("anxiety-toolkit:custom-tools", []);
   const [favorites, setFavorites] = useLocalStorage<string[]>("anxiety-toolkit:favorites", []);
-  const [checkIns, setCheckIns] = useLocalStorage<CheckIn[]>("anxiety-toolkit:checkins", []);
+  const [rawCheckIns, setCheckIns] = useLocalStorage<CheckIn[]>("anxiety-toolkit:checkins", []);
+  // Same old-scale guard as tool moods (see normalizeIntensity) — applied
+  // on read so historical entries display correctly without touching
+  // storage.
+  const checkIns = useMemo<CheckIn[]>(
+    () => rawCheckIns.map((c) => ({ ...c, intensity: normalizeIntensity(c.intensity) })),
+    [rawCheckIns],
+  );
   const [dayLogs, setDayLogs] = useLocalStorage<Record<string, DayLog>>("anxiety-toolkit:day-logs", {});
   const [journalEntries, setJournalEntries] = useLocalStorage<JournalEntry[]>("anxiety-toolkit:journal", []);
   const [resources, setResources] = useLocalStorage<Resource[]>("anxiety-toolkit:resources", []);
@@ -91,7 +99,15 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     const base = [...DEFAULT_TOOLS, ...customTools];
     return base.map((t) => {
       const edit = toolEdits[t.id];
-      return edit ? { ...t, ...edit } : t;
+      if (!edit) return t;
+      const merged = { ...t, ...edit };
+      // Guard against mood values saved under the app's old 5-level scale
+      // (see normalizeIntensity) — without this, a tool tagged back then
+      // silently stops matching any of today's 3 levels.
+      if (merged.moods) {
+        merged.moods = Array.from(new Set(merged.moods.map(normalizeIntensity))).sort((a, b) => a - b);
+      }
+      return merged;
     });
   }, [toolEdits, customTools]);
 
