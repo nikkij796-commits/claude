@@ -84,7 +84,9 @@ export function HomeScreen({
                       {c.note ? c.note : INTENSITY_LABELS[c.intensity]}
                     </span>
                     {c.note && (
-                      <span className="ml-2 text-xs text-ink-soft">{INTENSITY_LABELS[c.intensity]}</span>
+                      <span className="ml-2 text-xs text-ink-soft">
+                        {c.strength ? `${c.strength}/5` : INTENSITY_LABELS[c.intensity]}
+                      </span>
                     )}
                   </div>
                   <span className="shrink-0 text-xs text-ink-soft">

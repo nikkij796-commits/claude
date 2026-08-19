@@ -88,7 +88,9 @@ export function TrackerScreen() {
                               <span>
                                 {c.note ? c.note : INTENSITY_LABELS[c.intensity]}
                                 {c.note && (
-                                  <span className="ml-1.5 text-ink-soft">({INTENSITY_LABELS[c.intensity]})</span>
+                                  <span className="ml-1.5 text-ink-soft">
+                                    ({c.strength ? `${c.strength}/5` : INTENSITY_LABELS[c.intensity]})
+                                  </span>
                                 )}
                               </span>
                               <span className="text-ink-soft">

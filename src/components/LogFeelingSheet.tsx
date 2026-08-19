@@ -2,12 +2,20 @@ import { useState } from "react";
 import type { Intensity } from "../types";
 import { useAppData } from "../state/AppDataContext";
 import { useDialogA11y } from "../hooks/useDialogA11y";
-import { IntensitySlider } from "./IntensitySlider";
 import { Button } from "./ui";
+
+// Coarse bucket for the required, app-wide `intensity` field — feeling logs
+// don't drive recommendations or the Tracker, this just keeps the record
+// internally consistent.
+function bucketStrength(strength: number): Intensity {
+  if (strength <= 2) return 1;
+  if (strength <= 3) return 2;
+  return 3;
+}
 
 export function LogFeelingSheet({ word, onClose }: { word: string; onClose: () => void }) {
   const { addCheckIn } = useAppData();
-  const [intensity, setIntensity] = useState<Intensity>(2);
+  const [strength, setStrength] = useState(3);
   const dialogRef = useDialogA11y(onClose);
 
   return (
@@ -25,12 +33,27 @@ export function LogFeelingSheet({ word, onClose }: { word: string; onClose: () =
         <h2 className="text-lg font-semibold text-ink">Feeling {word.toLowerCase()}</h2>
         <p className="mt-1 text-sm text-ink-soft">How strong is it right now?</p>
         <div className="mt-4">
-          <IntensitySlider value={intensity} onChange={setIntensity} />
+          <input
+            type="range"
+            min={1}
+            max={5}
+            step={1}
+            value={strength}
+            onChange={(e) => setStrength(Number(e.target.value))}
+            className="w-full accent-[var(--color-sage)] h-2"
+            aria-label="Feeling strength"
+            aria-valuetext={`${strength} out of 5`}
+          />
+          <div className="mt-3 flex items-center justify-between text-xs text-ink-soft">
+            <span>1</span>
+            <span>5</span>
+          </div>
+          <p className="mt-2 text-center text-lg font-medium text-ink">{strength} / 5</p>
         </div>
         <Button
           className="mt-5 w-full"
           onClick={() => {
-            addCheckIn({ intensity, note: word });
+            addCheckIn({ intensity: bucketStrength(strength), note: word, strength: strength as 1 | 2 | 3 | 4 | 5 });
             onClose();
           }}
         >

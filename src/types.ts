@@ -68,6 +68,14 @@ export interface CheckIn {
   timestamp: string; // ISO
   intensity: Intensity;
   note?: string;
+  /**
+   * How strong a specific named feeling was (1-5), set when logging a
+   * feeling from the feelings wheel. Purely descriptive — unlike
+   * `intensity`, it doesn't drive "Might help right now" recommendations
+   * or any other app behavior, so it's shown alongside the feeling instead
+   * of the coarse Calm/Stressed/Overwhelming label when present.
+   */
+  strength?: 1 | 2 | 3 | 4 | 5;
 }
 
 export const DAY_KEYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
