@@ -107,8 +107,16 @@ const MOODS_SELFCARE: Intensity[] = [1, 2];
 
 export const DEFAULT_TOOLS: Tool[] = [
   // 1. Predicting & Preventing
-  tool("predicting", "Start Stop Continue", { id: "predicting-ins-outs", moods: MOODS_PREVENTIVE }),
-  tool("predicting", "Identify Triggers", { id: "predicting-triggers", moods: MOODS_PREVENTIVE }),
+  tool("predicting", "Start Stop Continue", {
+    id: "predicting-ins-outs",
+    moods: MOODS_PREVENTIVE,
+    listBuckets: ["Start", "Stop", "Continue"],
+  }),
+  tool("predicting", "Identify Triggers", {
+    id: "predicting-triggers",
+    moods: MOODS_PREVENTIVE,
+    listBuckets: ["Triggers"],
+  }),
   tool("predicting", "Breath work", { guidedSeconds: 60, moods: MOODS_GROUNDING }),
   tool("predicting", "Take a break / walk away", { guidedSeconds: 90, moods: MOODS_GROUNDING }),
   tool("predicting", "5-4-3-2-1 (PQ exercise)", { guidedSeconds: 5 * 60, moods: MOODS_GROUNDING }),

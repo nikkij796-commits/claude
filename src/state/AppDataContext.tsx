@@ -10,6 +10,7 @@ import type {
   Resource,
   Tool,
   ToolEdits,
+  ToolListItem,
 } from "../types";
 
 function todayKey(d = new Date()): string {
@@ -61,6 +62,10 @@ interface AppDataValue {
   addResource: (resource: Omit<Resource, "id" | "createdAt">) => void;
   updateResource: (id: string, patch: Partial<Pick<Resource, "title" | "body">>) => void;
   deleteResource: (id: string) => void;
+
+  getToolListItems: (toolId: string, bucket: string) => ToolListItem[];
+  addToolListItem: (toolId: string, bucket: string, text: string) => void;
+  removeToolListItem: (toolId: string, bucket: string, itemId: string) => void;
 }
 
 const AppDataContext = createContext<AppDataValue | null>(null);
@@ -77,6 +82,10 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
   const [dayLogs, setDayLogs] = useLocalStorage<Record<string, DayLog>>("anxiety-toolkit:day-logs", {});
   const [journalEntries, setJournalEntries] = useLocalStorage<JournalEntry[]>("anxiety-toolkit:journal", []);
   const [resources, setResources] = useLocalStorage<Resource[]>("anxiety-toolkit:resources", []);
+  const [toolLists, setToolLists] = useLocalStorage<Record<string, Record<string, ToolListItem[]>>>(
+    "anxiety-toolkit:tool-lists",
+    {},
+  );
 
   const tools = useMemo<Tool[]>(() => {
     const base = [...DEFAULT_TOOLS, ...customTools];
@@ -156,6 +165,26 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     setResources((prev) => prev.filter((r) => r.id !== id));
   };
 
+  const getToolListItems: AppDataValue["getToolListItems"] = (toolId, bucket) =>
+    toolLists[toolId]?.[bucket] ?? [];
+
+  const addToolListItem: AppDataValue["addToolListItem"] = (toolId, bucket, text) => {
+    const item: ToolListItem = { id: newId(), text, createdAt: new Date().toISOString() };
+    setToolLists((prev) => {
+      const forTool = prev[toolId] ?? {};
+      const forBucket = forTool[bucket] ?? [];
+      return { ...prev, [toolId]: { ...forTool, [bucket]: [...forBucket, item] } };
+    });
+  };
+
+  const removeToolListItem: AppDataValue["removeToolListItem"] = (toolId, bucket, itemId) => {
+    setToolLists((prev) => {
+      const forTool = prev[toolId] ?? {};
+      const forBucket = forTool[bucket] ?? [];
+      return { ...prev, [toolId]: { ...forTool, [bucket]: forBucket.filter((i) => i.id !== itemId) } };
+    });
+  };
+
   const value: AppDataValue = {
     tools,
     toolsByCategory,
@@ -182,6 +211,9 @@ export function AppDataProvider({ children }: { children: ReactNode }) {
     addResource,
     updateResource,
     deleteResource,
+    getToolListItems,
+    addToolListItem,
+    removeToolListItem,
   };
 
   return <AppDataContext.Provider value={value}>{children}</AppDataContext.Provider>;

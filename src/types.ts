@@ -26,6 +26,19 @@ export interface Tool {
   journalPrompts?: JournalPrompt[];
   /** Which check-in intensities this tool should be suggested for under "Might help right now". */
   moods?: Intensity[];
+  /**
+   * When set, this tool gets a persistent, cumulative list under each named
+   * bucket (e.g. ["Start", "Stop", "Continue"]) instead of a one-off
+   * journal entry — items you add stick around and build up over time,
+   * shown as removable bubbles.
+   */
+  listBuckets?: string[];
+}
+
+export interface ToolListItem {
+  id: string;
+  text: string;
+  createdAt: string; // ISO
 }
 
 // 1 = Calm, 2 = Stressed, 3 = Overwhelming.

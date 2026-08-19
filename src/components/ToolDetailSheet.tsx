@@ -4,6 +4,7 @@ import { useAppData } from "../state/AppDataContext";
 import { useDialogA11y } from "../hooks/useDialogA11y";
 import { Button } from "./ui";
 import { StructuredJournalForm } from "./StructuredJournalForm";
+import { ToolListBuckets } from "./ToolListBuckets";
 
 const MOOD_CHIPS: { level: Intensity; label: string }[] = [
   { level: 1, label: "Calm" },
@@ -98,6 +99,8 @@ export function ToolDetailSheet({
             </div>
 
             <p className="mt-3 whitespace-pre-wrap text-base leading-relaxed text-ink-soft">{liveTool.howTo}</p>
+
+            {liveTool.listBuckets && <ToolListBuckets toolId={liveTool.id} buckets={liveTool.listBuckets} />}
 
             <p className="mt-5 text-sm font-medium text-ink-soft">Might help right now when feeling…</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
